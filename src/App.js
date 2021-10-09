@@ -20,26 +20,25 @@ function App() {
 
   useEffect(()=>{
   if (!imgName) return;
-
-    const fetchImages  = async () =>  {
-    loaderToggle();
-      return imgApi
-        .fetchImg(imgName, page)
-        .then(images =>
-          setImages(prevState => [...prevState, ...images.hits]
-        )).finally(() => loaderToggle()); 
-  };
+ 
   fetchImages();
   }, [imgName, page])
   
+  const fetchImages = async () => {
+      setIsLoading(true)
+      const images = await imgApi
+        .fetchImg(imgName, page)
+        setImages(prevState => [...prevState, ...images.hits])
+        setIsLoading(false); 
+    };
+
   const scrollPage = () => {
-    setTimeout(() => {
       window.scrollBy({
         top: document.documentElement.clientHeight - 160,
         behavior: "smooth",
       });
-    }, 800);
-  };
+    };
+  
 
   const handleSearchbarSubmit = imgName => {
    setImgName(imgName);
