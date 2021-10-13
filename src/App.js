@@ -20,26 +20,28 @@ function App() {
 
   useEffect(()=>{
   if (!imgName) return;
- 
   fetchImages();
   }, [imgName, page])
   
   const fetchImages = async () => {
-      setIsLoading(true)
-      const images = await imgApi
-        .fetchImg(imgName, page)
-        setImages(prevState => [...prevState, ...images.hits])
-        setIsLoading(false); 
-    };
+    setIsLoading(true)
+    const images = await imgApi
+      .fetchImg(imgName, page)
+      setImages(prevState => [...prevState, ...images.hits])
+      setIsLoading(false); 
+    if (page !== 1) {
+      scrollPage()
+    } 
+    
+  };
 
   const scrollPage = () => {
       window.scrollBy({
         top: document.documentElement.clientHeight - 160,
         behavior: "smooth",
       });
-    };
+  };
   
-
   const handleSearchbarSubmit = imgName => {
    setImgName(imgName);
    setPage(1);
@@ -48,15 +50,6 @@ function App() {
 
   const OnLoadMore = () => {
     setPage(prev => (prev + 1));
-    if (imgName) {
-      loaderToggle();
-      scrollPage();
-      loaderToggle();
-    }
-  };
-
-  const loaderToggle = () => {
-    setIsLoading(prev => !prev);
   };
 
   const onImgClick = e => {
